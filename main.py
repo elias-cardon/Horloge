@@ -1,5 +1,5 @@
 import time
-from tkinter import Tk, Label, Button, Entry, StringVar, messagebox
+from tkinter import Tk, Label, Button, Entry, StringVar, messagebox, font
 
 class Horloge:
     def __init__(self, heure_tuple):
@@ -28,22 +28,34 @@ class Application(Tk):
     def __init__(self):
         super().__init__()
 
-        self.title("Horloge et alarme")
-        self.geometry("300x200")
+        # Centre la fenêtre sur l'écran
+        self.update_idletasks()
+        width = self.winfo_screenwidth()
+        height = self.winfo_screenheight()
+        x = (width - self.winfo_reqwidth()) // 2
+        y = (height - self.winfo_reqheight()) // 2
+        self.geometry(f"300x200+{x}+{y}")
 
-        self.heure_label = Label(self, text="")
+        self.title("Horloge et alarme")
+
+        # Définit une police plus grande et indigo pour les labels et boutons
+        big_font = font.Font(size=14)
+        indigo_color = "#4B0082"
+
+        self.heure_label = Label(self, text="", font=big_font, fg=indigo_color)
         self.heure_label.pack(pady=10)
 
-        self.alarme_label = Label(self, text="Régler l'alarme (hh:mm):")
+        self.alarme_label = Label(self, text="Régler l'alarme (hh:mm):", font=big_font, fg=indigo_color)
         self.alarme_label.pack()
 
         self.alarme_entry = Entry(self)
         self.alarme_entry.pack()
 
-        self.alarme_button = Button(self, text="Régler l'alarme", command=self.set_alarm)
+        self.alarme_button = Button(self, text="Régler l'alarme", command=self.set_alarm, font=big_font,
+                                    fg=indigo_color)
         self.alarme_button.pack(pady=10)
 
-        self.status_label = Label(self, text="")
+        self.status_label = Label(self, text="", font=big_font, fg=indigo_color)
         self.status_label.pack()
 
         self.update_clock()
