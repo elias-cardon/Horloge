@@ -12,13 +12,13 @@ class Horloge:
     def regler_heure(self, heure_tuple):
         self.heure = heure_tuple
 
-    def regler_alarme(self, alarme_tuple):
-        while True:
-            h, m, s = time.localtime()[3:6]
-            self.heure = (h, m, s)
-            if self.heure == alarme_tuple:
-                return "L'alarme se déclenche !"
-            time.sleep(1)
+    def check_alarme(self, alarme_tuple):
+        h, m, s = time.localtime()[3:6]
+        self.heure = (h, m, s)
+        if self.heure == alarme_tuple:
+            return "L'alarme se déclenche !"
+        else:
+            return None
 
 def heure_locale_tuple():
     h, m, s = time.localtime()[3:6]
@@ -68,13 +68,10 @@ class Application(Tk):
         alarme_tuple = (h, m, 0)
         heure_locale = heure_locale_tuple()
         horloge = Horloge(heure_locale)
-
-        # Utilisez la méthode after pour appeler la fonction check_alarm
-        # sans bloquer l'interface principale
         self.after(1000, self.check_alarm, horloge, alarme_tuple)
 
     def check_alarm(self, horloge, alarme_tuple):
-        result = horloge.regler_alarme(alarme_tuple)
+        result = horloge.check_alarme(alarme_tuple)
         if result:
             messagebox.showinfo("Alarme", result)
         else:
