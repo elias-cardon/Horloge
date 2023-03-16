@@ -1,49 +1,78 @@
 import time
-from tkinter import Tk, Label, Button
+from tkinter import Tk, Label, Button, Entry, StringVar, messagebox
 
 class Horloge:
     def __init__(self, heure_tuple):
-        # Initialisation de l'attribut d'instance 'heure' avec le tuple donné
         self.heure = heure_tuple
 
     def afficher_heure(self):
-        # Extraction des heures, minutes et secondes du tuple 'self.heure'
         h, m, s = self.heure
-        # Affichage de l'heure sous la forme "hh:mm:ss" en utilisant une f-string
-        print(f"{h:02d}:{m:02d}:{s:02d}")
+        return f"{h:02d}:{m:02d}:{s:02d}"
 
     def regler_heure(self, heure_tuple):
-        # Mise à jour de l'attribut d'instance 'heure' avec le tuple donné
         self.heure = heure_tuple
-        # Affichage de l'heure mise à jour
-        self.afficher_heure()
 
     def regler_alarme(self, alarme_tuple):
         while True:
-            # Récupération de l'heure actuelle à partir du module 'time'
             h, m, s = time.localtime()[3:6]
-            # Mise à jour de l'attribut d'instance 'heure' avec l'heure actuelle
             self.heure = (h, m, s)
-            # Vérification si l'heure actuelle correspond à l'heure de l'alarme
             if self.heure == alarme_tuple:
-                # Affichage d'un message lorsque l'alarme se déclenche
-                print("L'alarme se déclenche !")
-                break
-            # Affichage de l'heure actuelle
-            self.afficher_heure()
-            # Pause d'une seconde avant de répéter la boucle
+                return "L'alarme se déclenche !"
             time.sleep(1)
 
 def heure_locale_tuple():
-    # Récupération de l'heure locale en utilisant 'time.localtime()'
     h, m, s = time.localtime()[3:6]
-    # Retourne l'heure locale sous la forme d'un tuple
     return (h, m, s)
 
-if __name__ == "__main__":
-    # Récupération du tuple de l'heure locale
-    heure_locale = heure_locale_tuple()
+class Application(Tk):
+    def __init__(self):
+        super().__init__()
 
-    # Création d'une instance de la classe 'Horloge' avec l'heure locale
-    horloge = Horloge(heure_locale)
-    horloge.regler_alarme(horloge)
+        self.title("Horloge et alarme")
+        self.geometry("300x200")
+
+        self.heure_label = Label(self, text="")
+        self.heure_label.pack(pady=10)
+
+        self.alarme_label = Label(self, text="Régler l'alarme (hh:mm):")
+        self.alarme_label.pack()
+
+        self.alarme_entry = Entry(self)
+        self.alarme_entry.pack()
+
+        self.alarme_button = Button(self, text="Régler l'alarme", command=self.set_alarm)
+        self.alarme_button.pack(pady=10)
+
+        self.status_label = Label(self, text="")
+        self.status_label.pack()
+
+        self.update_clock()
+
+    def update_clock(self):
+        heure_locale = heure_locale_tuple()
+        horloge = Horloge(heure_locale)
+        heure_text = horloge.afficher_heure()
+        self.heure_label.config(text=heure_text)
+        self.after(1000, self.update_clock)
+
+    def set_alarm(self):
+        alarme_text = self.alarme_entry.get()
+        try:
+            h, m = map(int, alarme_text.split(':'))
+            if not (0 <= h < 24) or not (0 <= m < 60):
+                raise ValueError("Heure ou minute invalide.")
+        except ValueError as e:
+            messagebox.showerror("Erreur", f"Entrée d'alarme invalide : {e}")
+            return
+
+        alarme_tuple = (h, m, 0)
+        heure_locale = heure_locale_tuple()
+        horloge = Horloge(heure_locale)
+
+        # Utilisez la méthode after pour appeler la fonction check_alarm
+        # sans bloquer l'interface principale
+        self.after(1000, self.check_alarm, horloge, alarme_tuple)
+
+if __name__ == "__main__":
+    app = Application()
+    app.mainloop()
