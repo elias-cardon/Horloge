@@ -1,5 +1,5 @@
 import time
-from tkinter import Tk, Label, Button, Entry, StringVar, messagebox, font
+from tkinter import Tk, Label, Button, Entry, messagebox, font
 
 class Horloge:
     def __init__(self, heure_tuple):
@@ -45,7 +45,7 @@ class Application(Tk):
         self.heure_label = Label(self, text="", font=big_font, fg=indigo_color)
         self.heure_label.pack(pady=10)
 
-        self.alarme_label = Label(self, text="Régler l'alarme (hh:mm):", font=big_font, fg=indigo_color)
+        self.alarme_label = Label(self, text="Régler l'alarme (hh:mm) :", font=big_font, fg=indigo_color)
         self.alarme_label.pack()
 
         self.alarme_entry = Entry(self)
