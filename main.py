@@ -73,6 +73,13 @@ class Application(Tk):
         # sans bloquer l'interface principale
         self.after(1000, self.check_alarm, horloge, alarme_tuple)
 
+    def check_alarm(self, horloge, alarme_tuple):
+        result = horloge.regler_alarme(alarme_tuple)
+        if result:
+            messagebox.showinfo("Alarme", result)
+        else:
+            self.after(1000, self.check_alarm, horloge, alarme_tuple)
+
 if __name__ == "__main__":
     app = Application()
     app.mainloop()
