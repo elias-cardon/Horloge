@@ -2,6 +2,7 @@
 import time
 from tkinter import Tk, Label, Button, Entry, messagebox, font
 
+
 # Classe Horloge pour gérer l'affichage et la vérification de l'heure et de l'alarme
 class Horloge:
     # Initialise l'objet Horloge avec une heure donnée sous forme de tuple
@@ -32,10 +33,12 @@ class Horloge:
         h = h % 12 if h % 12 != 0 else 12
         return f"{h:02d}:{m:02d}:{s:02d} {am_pm}"
 
+
 # Fonction pour obtenir l'heure locale sous forme de tuple
 def heure_locale_tuple():
     h, m, s = time.localtime()[3:6]
     return (h, m, s)
+
 
 # Classe Application pour construire l'interface graphique et gérer l'interaction utilisateur
 class Application(Tk):
@@ -143,6 +146,7 @@ class Application(Tk):
             messagebox.showinfo("Alarme", result)
         else:
             self.after(1000, self.check_alarm, horloge, alarme_tuple)
+
 
 # Code principal : crée une instance de l'objet Application et démarre la boucle principale de l'application
 if __name__ == "__main__":
